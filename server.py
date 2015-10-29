@@ -10,15 +10,27 @@
 """
 from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
+import requests
+import justext
 
 
-@app.route('/_add_numbers')
-def add_numbers():
-    """Add two numbers server side, ridiculous but well..."""
-    a = request.args.get('a', 0, type=int)
-    b = request.args.get('b', 0, type=int)
-    return jsonify(result=a + b)
+@app.route('/q')
+def data():
+    """data endpoint"""
+    url = request.args.get('url', '')
 
+
+    response = requests.get(url)
+    paragraphs = justext.justext(response.content, justext.get_stoplist("English"))
+    return_array = []
+
+
+    for paragraph in paragraphs:
+      if not paragraph.is_boilerplate:
+        return_array.append(paragraph.text)
+    # import pdb; pdb.set_trace()
+
+    return ''.join(return_array)
 
 @app.route('/')
 def index():
