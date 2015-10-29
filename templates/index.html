@@ -1,6 +1,32 @@
 {% extends "layout.html" %}
 {% block body %}
+<script type="text/javascript">
+  $(function() {
+    var submit_form = function(e) {
+      $.getJSON($SCRIPT_ROOT + '/google_query', {
+        a: $('input[name="enter_query"]').val()
+      }, function(data) {
+        $('#result').text(data.result);
+        $('input[name=enter_query]').focus().select();
+      });
+      return false;
+    };
 
-<h1>Welcome to Keith's JusText api</h1>
+    $('a#calculate').bind('click', submit_form);
 
+    $('input[type=text]').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+        submit_form(e);
+      }
+    });
+
+    $('input[name=a]').focus();
+  });
+</script>
+<h1>jQuery Example</h1>
+<p>
+  <input type="text" size="100" name="enter_query">
+  </br>
+  <span id="result">?</span>
+<p><a href=# id="calculate">calculate server side</a>
 {% endblock %}
