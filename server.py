@@ -23,13 +23,16 @@ def data():
     response = requests.get(url)
     paragraphs = justext.justext(response.content, justext.get_stoplist("English"))
     return_array = []
+    print("after_request")
 
 
     for paragraph in paragraphs:
       if not paragraph.is_boilerplate:
         return_array.append(paragraph.text)
+        print("after_request")
     # import pdb; pdb.set_trace()
-
+    if ('' == (''.join(return_array))):
+        return "not today"
     return ''.join(return_array)
 
 @app.route('/')
