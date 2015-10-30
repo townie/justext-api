@@ -9,11 +9,12 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask import Flask, jsonify, render_template, request, Response
+app = Flask(__name__)
 import requests
 import justext
 import json
 
-app = Flask(__name__)
+
 
 
 @app.route('/q')
