@@ -10,6 +10,7 @@
 """
 from flask import Flask, jsonify, render_template, request, Response
 app = Flask(__name__)
+from werkzeug.urls import url_encode, url_fix
 import requests
 import justext
 import json
@@ -17,7 +18,7 @@ import json
 
 
 
-@app.route('/q')
+@app.route('/')
 def data():
     """data endpoint"""
     url = request.args.get('url', '')
@@ -34,20 +35,26 @@ def data():
         return "not today"
     return ''.join(return_array)
 
-@app.route('/qq')
+@app.route('/v0/q')
 def qq():
     url = request.args.get('url', '')
+    # import pdb; pdb.set_trace()
+
+
+    # url_fix(url)
     response = requests.get(url)
     paragraphs = justext.justext(response.content, justext.get_stoplist("English"))
     text = []
-
     for paragraph in paragraphs:
-        if paragraph.class_type == 'good':
-            p = {}
-            p['content'] = paragraph.text
-            p['heading'] = paragraph.heading
-            text.append(p)
+        p = {}
+        p['is_boilerplate'] = paragraph.is_boilerplate
+        p['class_type'] = paragraph.class_type
+        p['content'] = paragraph.text
+        p['heading'] = paragraph.heading
+        text.append(p)
 
+
+    # text.append({ 'response.content' : response.content })
     return json.dumps(text)
 
 @app.route('/')

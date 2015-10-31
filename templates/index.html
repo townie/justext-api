@@ -1,32 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
-<script type="text/javascript">
-  $(function() {
-    var submit_form = function(e) {
-      $.getJSON($SCRIPT_ROOT + '/google_query', {
-        a: $('input[name="enter_query"]').val()
-      }, function(data) {
-        $('#result').text(data.result);
-        $('input[name=enter_query]').focus().select();
-      });
-      return false;
-    };
 
-    $('a#calculate').bind('click', submit_form);
+<form action="/v0/q">
+  Enter URL:
+  <input type="text" name="url">
+  <input type="submit" value="Submit">
 
-    $('input[type=text]').bind('keydown', function(e) {
-      if (e.keyCode == 13) {
-        submit_form(e);
-      }
-    });
+</form>
 
-    $('input[name=a]').focus();
-  });
-</script>
-<h1>jQuery Example</h1>
-<p>
-  <input type="text" size="100" name="enter_query">
-  </br>
-  <span id="result">?</span>
-<p><a href=# id="calculate">calculate server side</a>
+
 {% endblock %}
