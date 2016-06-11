@@ -18,7 +18,7 @@ import json
 
 
 
-@app.route('/')
+@app.route('/v0/q')
 def data():
     """data endpoint"""
     url = request.args.get('url', '')
@@ -28,14 +28,22 @@ def data():
     return_array = []
 
     for paragraph in paragraphs:
+      if not paragraph.is_boilerplate and paragraph.is_heading:
+        return_array.append("HEADER: " + paragraph.text + " :HEADER")
+
+    return_array.append("BODY: ")
+
+    for paragraph in paragraphs:
       if not paragraph.is_boilerplate:
-        return_array.append(paragraph.text)
+        return_array.append(paragraph.text + " ")
+
+    return_array.append(" :BODY")
 
     if ('' == (''.join(return_array))):
         return "not today"
     return ''.join(return_array)
 
-@app.route('/v0/q')
+@app.route('/v0/q/metadata')
 def qq():
     url = request.args.get('url', '')
     # import pdb; pdb.set_trace()
@@ -59,6 +67,7 @@ def qq():
 
 @app.route('/')
 def index():
+    print "bitch"
     return render_template('index.html')
 
 if __name__ == '__main__':
